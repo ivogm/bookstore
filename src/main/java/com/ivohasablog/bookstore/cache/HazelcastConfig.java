@@ -22,7 +22,7 @@ public class HazelcastConfig {
     private static final String HZ_MEMBERS_SEPARATOR = ",";
 
     /** Hazelcast Maps */
-    public static final String OWL_MAP="outcomeWagerLimitMap";
+    public static final String BOOK_MAP = "bookMap";
     public static final String SHOPPING_CART_MAP ="shoppingCartMap";
 
     @Autowired
@@ -59,6 +59,7 @@ public class HazelcastConfig {
         tcpIpConfig.setMembers(Arrays.asList(hzProperties.getCluster().getMembers().split(HZ_MEMBERS_SEPARATOR)));
 
         //Maps
+        config.addMapConfig(configBookMap());
         config.addMapConfig(configShoppingCartMap());
 
         return Hazelcast.newHazelcastInstance(config);
@@ -69,6 +70,14 @@ public class HazelcastConfig {
         awlMapConfig.setName(SHOPPING_CART_MAP);
         awlMapConfig.setEvictionPolicy(EvictionPolicy.LFU);
         awlMapConfig.addMapIndexConfig(new MapIndexConfig("id", true));
+        return awlMapConfig;
+    }
+
+    private MapConfig configBookMap() {
+        MapConfig awlMapConfig = new MapConfig();
+        awlMapConfig.setName(BOOK_MAP);
+        awlMapConfig.setEvictionPolicy(EvictionPolicy.LFU);
+        awlMapConfig.addMapIndexConfig(new MapIndexConfig("id", false));
         return awlMapConfig;
     }
 }
